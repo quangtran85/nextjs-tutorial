@@ -7,6 +7,10 @@ import { CacheProvider, EmotionCache } from '@emotion/react'
 import theme from '../components/Theme'
 import MainLayout from '../components/Layout'
 import { StateProvider } from '../contexts/AppContext'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import * as auth from '../services/auth';
+import { useEffect } from 'react';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 
@@ -15,6 +19,9 @@ export interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
+  useEffect(() => {
+    auth.init()
+  }, [])
   const { Component, pageProps } = props
 
   return (
@@ -28,6 +35,18 @@ export default function MyApp(props: MyAppProps) {
         <StateProvider>
           <MainLayout>
             <Component {...pageProps} />
+            <ToastContainer
+              position="bottom-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </MainLayout>
         </StateProvider>
       </ThemeProvider>

@@ -1,10 +1,13 @@
 import { Link } from '@mui/material'
+import { logout } from '../../services/auth';
+import { useRouter } from 'next/navigation';
 
 export default function LogoutLink() {
-  const handleLogout = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    alert('logout!')
+  const { push } = useRouter();
+  const handleLogout = () => {
+    logout().then(() => {
+      push('/sign-in');
+    });
   }
 
   return (
