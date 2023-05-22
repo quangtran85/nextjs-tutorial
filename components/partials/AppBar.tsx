@@ -9,8 +9,15 @@ import {
 import { AutoStories } from '@mui/icons-material'
 import SearchBox from '../Search.jsx'
 import LogoutLink from '../auth/LogoutLink'
+import helpers from '../../utils/helpers'
+import { useEffect, useState } from 'react'
 
 export default function Bar() {
+  const [userName, setUserName] = useState(undefined)
+  useEffect(() => {
+    setUserName(helpers.getUserLogged()?.userName)
+  }, [])
+
   return (
     <>
       <AppBar position="static">
@@ -40,23 +47,22 @@ export default function Bar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            Welcome, John!
+            {userName === undefined ? '' : 'Welcome,' + userName}
           </Typography>
-          <Link
+          {userName === undefined ? <><Link
             href="/sign-up"
             title="Register"
             sx={{ color: 'white', marginLeft: '10px' }}
           >
             Register
-          </Link>
-          <Link
+          </Link><Link
             href="/sign-in"
             title="Register"
             sx={{ color: 'white', marginLeft: '10px' }}
           >
             Login
-          </Link>
-          <LogoutLink />
+          </Link></> : <LogoutLink />}
+
         </Toolbar>
       </AppBar>
     </>

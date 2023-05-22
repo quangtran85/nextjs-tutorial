@@ -2,22 +2,36 @@ import * as React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
-import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
+import request from '../utils/api'
+import helpers from '../utils/helpers'
+import { LOGIN_LINK } from '../utils/AllLink'
+import { useRouter } from 'next/router'
 
 export default function Login() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const router = useRouter()
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('username'),
-      password: data.get('password'),
+    const dataForm = new FormData(event.currentTarget)
+    await request.post(LOGIN_LINK, {
+      username: dataForm.get('username'),
+      password: dataForm.get('password'),
+    }).then(function(response) {
+      if (response.data) {
+        const data = response.data.data
+        helpers.storeUserLogged(data)
+        helpers.storeAuthToken(data.accessToken, data.refreshToken)
+        window.location.href = '/'
+      }
     })
+      .catch(function(error) {
+        console.log(error)
+      })
   }
 
   return (

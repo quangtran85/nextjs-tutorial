@@ -1,10 +1,11 @@
 import { Link } from '@mui/material'
+import helpers from '../../utils/helpers'
 
 export default function LogoutLink() {
   const handleLogout = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
-    alert('logout!')
+    helpers.userLogout()
   }
 
   return (
