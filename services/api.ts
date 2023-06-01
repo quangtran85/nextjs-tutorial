@@ -10,10 +10,13 @@ export interface LoginResponse {
 
 export interface Customer {
   id: string;
-  firstName: string;
-  lastName: string;
   username: string;
   email: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  isMember?: boolean;
 }
 
 export interface RegistrationRequest {
@@ -103,10 +106,13 @@ export const apiClient = {
 
     return {
       id: data?.id,
-      firstName: data?.firstName,
-      lastName: data?.lastName,
       username: data?.username,
       email: data?.email,
+      address: data?.address,
+      city: data?.city,
+      state: data?.state,
+      zipCode: data?.zipCode,
+      isMember: data?.isMember,
     } as Customer
   }
 };

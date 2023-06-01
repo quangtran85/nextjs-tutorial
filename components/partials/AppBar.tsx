@@ -45,7 +45,7 @@ export default function Bar() {
                   component="div"
                   sx={{ display: { xs: 'none', sm: 'block' } }}
               >
-                  Welcome {authState.value.profile.firstName}!
+                  Welcome {authState.value.profile.username}!
               </Typography>
               <LogoutLink />
               </>
@@ -63,7 +63,7 @@ export default function Bar() {
               </Link>
               <Link
                 href="/sign-in"
-                title="Register"
+                title="Login"
                 sx={{ color: 'white', marginLeft: '10px' }}
               >
                 Login

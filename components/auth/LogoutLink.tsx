@@ -1,6 +1,6 @@
 import { Link } from '@mui/material'
 import { logout } from '../../services/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export default function LogoutLink() {
   const { push } = useRouter();

@@ -1,4 +1,4 @@
-import { Container, Divider, Grid, Paper, Typography } from '@mui/material'
+import { Container, Grid } from '@mui/material'
 import React from 'react'
 import AppBar from './partials/AppBar'
 import Footer from './partials/Footer'
