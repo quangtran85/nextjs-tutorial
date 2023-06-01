@@ -20,11 +20,14 @@ export interface Customer {
 }
 
 export interface RegistrationRequest {
-  firstName: string;
-  lastName: string;
-  email: string;
   username: string;
   password: string;
+  email: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  isMember?: boolean;
 }
 
 export interface ApiResponse<T> {
@@ -93,11 +96,22 @@ export const apiClient = {
     })
   },
 
-  register: async (req: RegistrationRequest) => {
+  register: async (req: RegistrationRequest) : Promise<Customer>=> {
     await fetcher('/account/customers/register', {
       body: JSON.stringify(req),
       method: 'POST',
-    }, false)
+    }, false).then(async result => {
+      if (!result.ok) {
+        return Promise.reject({
+          message: 'The username is already existed.'
+        });
+      }
+      return await result.json()
+    }, () => {
+      return Promise.reject({
+        message: 'Unknown error'
+      });
+    })
   },
 
   getProfile: async () => {
