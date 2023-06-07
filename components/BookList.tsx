@@ -64,9 +64,9 @@ export default function BookList() {
 
   const addToCart = (book) => {
     if (!cartBooks.find((cartBook) => cartBook.id === book.id)) {
-      setCartBooks([...cartBooks, book]);
+      setCartBooks(prevBook => [...prevBook, book]);
     }
-    setSelectedBooks(selectedBooks.filter((id) => id !== book.id));
+    setSelectedBooks(selectedBooks.filter((id) => cartBooks.includes(id)));
   };
 
   const handleCheckboxChange = (event) => {
