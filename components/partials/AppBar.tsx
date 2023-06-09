@@ -10,6 +10,8 @@ import { AutoStories } from '@mui/icons-material'
 import SearchBox from '../Search.jsx'
 import LogoutLink from '../auth/LogoutLink'
 
+import { state as authState } from '../../services/auth';
+
 export default function Bar() {
   return (
     <>
@@ -34,29 +36,41 @@ export default function Bar() {
           </Typography>
           <SearchBox />
           <Box sx={{ flexGrow: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            Welcome, John!
-          </Typography>
-          <Link
-            href="/sign-up"
-            title="Register"
-            sx={{ color: 'white', marginLeft: '10px' }}
-          >
-            Register
-          </Link>
-          <Link
-            href="/sign-in"
-            title="Register"
-            sx={{ color: 'white', marginLeft: '10px' }}
-          >
-            Login
-          </Link>
-          <LogoutLink />
+          {
+            authState.value.profile && (
+              <>
+              <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ display: { xs: 'none', sm: 'block' } }}
+              >
+                  Welcome {authState.value.profile.username}!
+              </Typography>
+              <LogoutLink />
+              </>
+            )
+          }
+          {
+            !authState.value.profile && (
+              <>
+              <Link
+                  href="/sign-up"
+                  title="Register"
+                  sx={{ color: 'white', marginLeft: '10px' }}
+              >
+                  Register
+              </Link>
+              <Link
+                href="/sign-in"
+                title="Login"
+                sx={{ color: 'white', marginLeft: '10px' }}
+              >
+                Login
+              </Link>
+              </>
+            )
+          }
         </Toolbar>
       </AppBar>
     </>

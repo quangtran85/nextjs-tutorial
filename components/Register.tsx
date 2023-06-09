@@ -4,21 +4,57 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import { createAccount } from '../services/account';
 
 export default function Register() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+  const validationSchema = Yup.object().shape({
+    username: Yup.string()
+      .required('Username is required')
+      .min(5, 'Username must be at least 5 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref<any>("password")], "Passwords must match")
+      .required("Passwords does not match"),
+    email: Yup.string().email("Email Incorrect format").required("Email is required"),
+    address: Yup.string().optional(),
+    city: Yup.string().optional(),
+    state: Yup.string().optional(),
+    zipCode: Yup.string().optional(),
+    isMember: Yup.boolean().optional(),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+  });
+
+  const { push } = useRouter();
+  const onSubmit = async (data) => {
+    createAccount(data).then(() => {
+      toast.dismiss();
+      toast.success('Register successful')
+      push('/');
+    }).catch(({ message }) => {
+      toast.dismiss();
+      toast.error(message);
     })
-  }
+  };
 
   return (
     <Grid container spacing={0} alignItems={'center'} justifyContent={'center'}>
@@ -41,41 +77,10 @@ export default function Register() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -84,6 +89,10 @@ export default function Register() {
                   label="Username"
                   name="username"
                   autoComplete="username"
+                  autoFocus
+                  {...register('username')}
+                  error={!!errors['username']}
+                  helperText={errors['username'] ? errors['username'].message : ''}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -94,8 +103,83 @@ export default function Register() {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
+                  autoComplete="password"
+                  autoFocus
+                  {...register('password')}
+                  error={!!errors['password']}
+                  helperText={errors['password'] ? errors['password'].message : ''}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="confirmPassword"
+                  autoFocus
+                  {...register('confirmPassword')}
+                  error={!!errors['confirmPassword']}
+                  helperText={errors['confirmPassword'] ? errors['confirmPassword'].message : ''}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  {...register('email')}
+                  error={!!errors['email']}
+                  helperText={errors['email'] ? errors['email'].message : ''}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="address"
+                  label="Address"
+                  name="address"
+                  autoComplete="address"
+                  {...register('address')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="city"
+                  label="City"
+                  name="city"
+                  autoComplete="city"
+                  {...register('city')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="state"
+                  label="State"
+                  name="state"
+                  autoComplete="state"
+                  {...register('state')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="zipCode"
+                  label="Zip Code"
+                  name="zipCode"
+                  autoComplete="zipCode"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel control={<Checkbox />} {...register('isMember')} name="isMember" label="I would like to be a BECS member to receive additional discounts " />
               </Grid>
             </Grid>
             <Button
