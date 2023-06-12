@@ -14,10 +14,12 @@ import {
   Pagination,
   Button,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
 import { getListBooks } from '../services/inventory';
+import { state as authState } from '../services/auth';
 
 export default function BookList() {
   const [page, setPage] = useState(1);
@@ -38,8 +40,9 @@ export default function BookList() {
     setLoading(true);
     getListBooks({ limit, skip , title})
       .then((response) => {
-        setBooks(response.data);
-        setTotalBooks(response.pagination.total);
+        const filteredBooks = response.data.filter((book) => book.stock !== 0);
+        setBooks(filteredBooks);
+        setTotalBooks(filteredBooks.length);
         setLoading(false);
       })
       .catch((error) => {
@@ -63,6 +66,11 @@ export default function BookList() {
   }, [isReload, cartBooks]);
 
   const addToCart = (book) => {
+    if (!authState.value.profile) {
+      router.push('/sign-in');
+      return;
+    }
+
     if (!cartBooks.find((cartBook) => cartBook.id === book.id)) {
       setCartBooks(prevBook => [...prevBook, book]);
     }
@@ -85,7 +93,7 @@ export default function BookList() {
   };
 
   const handleViewCart = () => {
-    router.push('/cart');
+    router.push('/view-cart');
   };
 
   const removeFromCart = (bookId) => {
@@ -93,7 +101,18 @@ export default function BookList() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const isNextDisabled = books.length < booksPerPage;

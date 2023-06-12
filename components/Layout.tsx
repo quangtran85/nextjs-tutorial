@@ -13,7 +13,6 @@ export default function MainLayout({ children }: LayoutProps) {
       <AppBar />
       <main>
         <Grid
-          container
           spacing={2}
           sx={{
             marginTop: '20px',
