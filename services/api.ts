@@ -32,6 +32,11 @@ export interface RegistrationRequest {
   isMember?: boolean;
 }
 
+export interface OrderRequest {
+  items: string[];
+  creditCardNumber: string;
+  couponCode?: string;
+}
 export interface ApiResponse<T> {
   data: T;
 }
@@ -153,4 +158,34 @@ export const apiClient = {
       pagination: { total: pagination.total },
     };
   },
+
+  checkCoupon: async (couponCode: string) => {
+    const result = await fetcher(`/store/promotion/check/${couponCode}`, {
+      method: 'GET',
+    });
+    const { data } = await result.json();
+    return {
+      isValid: !!data?.percentDiscount,
+      percentDiscount: data?.percentDiscount ?? null,
+    };
+  },
+
+  order: async ({items, creditCardNumber, couponCode}: OrderRequest) => {
+    await fetcher('/store/order', {
+      body: JSON.stringify({items, creditCardNumber, couponCode}),
+      method: 'POST',
+    }).then(async result => {
+      if (!result.ok) {
+        return Promise.reject({
+          message: 'Failed to order'
+        });
+      }
+      const { data } = await result.json();
+      return data;
+    }, () => {
+      return Promise.reject({
+        message: 'Unknown error'
+      });
+    })
+  }
 };

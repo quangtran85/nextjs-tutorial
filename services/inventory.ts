@@ -1,4 +1,4 @@
-import { apiClient } from './api';
+import { apiClient, OrderRequest } from './api'
 
 export interface IBook {
   id: string
@@ -22,3 +22,16 @@ export const getListBooks = ({ limit, skip, title }: Params) => {
   });
 };
 
+export const checkCoupon = (couponCode: string) => {
+  return apiClient.checkCoupon(couponCode)
+    .then((response) => {
+      return response
+    });
+};
+
+export const order = ({ items, creditCardNumber, couponCode}: OrderRequest) => {
+   return apiClient.order({items, creditCardNumber, couponCode})
+     .then((response) => {
+       return response
+   });
+};
