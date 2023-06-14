@@ -1,7 +1,7 @@
-import { Button, InputBase, alpha, styled } from '@mui/material'
-import { Search as SearchIcon } from '@mui/icons-material'
-import { useContext } from 'react'
-import { ActionType, store } from '../contexts/AppContext'
+import {alpha, Button, InputBase, styled} from '@mui/material'
+import {Search as SearchIcon} from '@mui/icons-material'
+import {useState} from 'react'
+import {useRouter} from "next/router";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -35,29 +35,32 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 export default function SearchBook() {
-  const globalState = useContext(store)
-  const { dispatch } = globalState
+  const [searchTitle, setSearchTitle] = useState('');
+  const  booksPerPage = 10;
+  const router = useRouter();
+  const handleSearchTitle = () => {
+    const queryParams = { limit: booksPerPage, skip: 0 };
+    if (searchTitle) {
+      queryParams.title = searchTitle;
+    } else {
+      delete queryParams.title;
+    }
+    router.push({ query: queryParams });
+  };
 
   return (
-    <>
-      <Search>
-        <StyledInputBase
-          placeholder="Book's name"
-          inputProps={{ 'aria-label': 'search' }}
-        />
-        <Button
-          endIcon={<SearchIcon />}
-          sx={{ color: 'white' }}
-          onClick={() => {
-            dispatch({
-              type: ActionType.SET_BOOK_LIST,
-              bookList: [{ title: 'Test' }],
-            })
-          }}
-        >
-          Search
-        </Button>
-      </Search>
-    </>
+      <>
+        <Search>
+          <StyledInputBase
+              placeholder="Book's name"
+              inputProps={{ 'aria-label': 'search' }}
+              value={searchTitle}
+              onChange={(event) => setSearchTitle(event.target.value)}
+          />
+          <Button endIcon={<SearchIcon />} sx={{ color: 'white' }} onClick={handleSearchTitle}>
+            Search
+          </Button>
+        </Search>
+      </>
   )
 }

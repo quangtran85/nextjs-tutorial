@@ -25,7 +25,7 @@ export default function BookList() {
 
   const router = useRouter();
 
-  const { limit = booksPerPage, skip = 0 } = router.query;
+  const { limit = booksPerPage, skip = 0 , title = ''} = router.query;
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState([]);
   const [totalBooks, setTotalBooks] = useState(0);
@@ -36,7 +36,7 @@ export default function BookList() {
   useEffect(() => {
     if (!router.isReady) return;
     setLoading(true);
-    getListBooks({ limit, skip })
+    getListBooks({ limit, skip , title})
       .then((response) => {
         setBooks(response.data);
         setTotalBooks(response.pagination.total);
@@ -46,7 +46,7 @@ export default function BookList() {
         console.error(error);
         setLoading(false);
       });
-  }, [router.isReady, limit, skip]);
+  }, [router.isReady, limit, skip, title]);
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cartBooks');

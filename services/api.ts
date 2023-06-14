@@ -132,9 +132,13 @@ export const apiClient = {
     } as Customer
   },
 
-  getListBooks: async (limit: number, skip: number) => {
-    const result = await fetcher(`/store/book/all?limit=${limit}&skip=${skip}`)
-    const { data, pagination } = await result.json()
+  getListBooks: async (limit: number, skip: number, title?: string) => {
+    let endpointUrl = `/store/book/all?limit=${limit}&skip=${skip}`;
+    if (title) {
+      endpointUrl += `&title=${encodeURIComponent(title)}`;
+    }
+    const result = await fetcher(endpointUrl, { method: 'GET' }, false);
+    const { data, pagination } = await result.json();
     return {
       data: data.map(
         (item) =>
@@ -145,7 +149,7 @@ export const apiClient = {
             price: item.price,
           } as IBook),
       ),
-      pagination : { total: pagination.total},
+      pagination: { total: pagination.total },
     };
-  }
+  },
 };
