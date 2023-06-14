@@ -147,6 +147,7 @@ export const apiClient = {
             title: item.title,
             author: item.author,
             price: item.price,
+            stock: item.stock,
           } as IBook),
       ),
       pagination: { total: pagination.total },
