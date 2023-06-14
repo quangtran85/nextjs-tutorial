@@ -1,3 +1,5 @@
+import { IBook } from './inventory';
+
 export interface LoginRequest {
   username: string;
   password: string;
@@ -128,5 +130,22 @@ export const apiClient = {
       zipCode: data?.zipCode,
       isMember: data?.isMember,
     } as Customer
+  },
+
+  getListBooks: async (limit: number, skip: number) => {
+    const result = await fetcher(`/store/book/all?limit=${limit}&skip=${skip}`)
+    const { data, pagination } = await result.json()
+    return {
+      data: data.map(
+        (item) =>
+          ({
+            id: item.id,
+            title: item.title,
+            author: item.author,
+            price: item.price,
+          } as IBook),
+      ),
+      pagination : { total: pagination.total},
+    };
   }
 };
