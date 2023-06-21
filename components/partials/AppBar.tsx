@@ -17,15 +17,16 @@ export default function Bar() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <AutoStories />
-          </IconButton>
+          <Link href="/" passHref>
+            <IconButton
+              size="large"
+              edge="start"
+              aria-label="open drawer"
+              sx={{ mr: 2, color: '#fff' }}
+            >
+              <AutoStories />
+            </IconButton>
+          </Link>
           <Typography
             variant="h6"
             noWrap
