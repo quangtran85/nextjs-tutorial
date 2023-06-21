@@ -37,6 +37,29 @@ export interface OrderRequest {
   creditCardNumber: string;
   couponCode?: string;
 }
+
+export interface BookRequest {
+  title: string;
+  author: string;
+  price: number;
+  stock: number;
+  reOrderThreshold?: number;
+}
+
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  price: number;
+  stock: number;
+  reOrderThreshold: number;
+}
+
+export interface PromotionRequest {
+  percentageDiscount: number;
+  expirationDate: Date;
+}
+
 export interface ApiResponse<T> {
   data: T;
 }
@@ -187,5 +210,60 @@ export const apiClient = {
         message: 'Unknown error'
       });
     })
-  }
+  },
+
+  createBook: async (book: BookRequest) => {
+    const result = await fetcher('/store/book', {
+      body: JSON.stringify(book),
+      method: 'POST',
+    });
+
+    if (!result.ok) {
+      throw new Error('Failed to create book');
+    }
+
+    const { data } = await result.json();
+    return data;
+  },
+
+  editBook: async (bookId: string, updatedBook: BookRequest) => {
+    const result = await fetcher(`/store/book/${bookId}`, {
+      body: JSON.stringify(updatedBook),
+      method: 'PUT',
+    });
+
+    if (!result.ok) {
+      throw new Error('Failed to edit book');
+    }
+
+    const { data } = await result.json();
+    return data;
+  },
+
+  getBookById: async (bookId: string) => {
+    const result = await fetcher(`/store/book/${bookId}`, {
+      method: 'GET',
+    });
+
+    if (!result.ok) {
+      throw new Error('Failed to get book');
+    }
+
+    const { data } = await result.json();
+    return data as Book;
+  },
+
+  createPromotion: async (promotionData: PromotionRequest) => {
+    const result = await fetcher('/store/promotion', {
+      body: JSON.stringify(promotionData),
+      method: 'POST',
+    });
+
+    if (!result.ok) {
+      throw new Error('Failed to create promotion');
+    }
+
+    const { data } = await result.json();
+    return data;
+  },
 };
