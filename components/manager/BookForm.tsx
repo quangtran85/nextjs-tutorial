@@ -21,8 +21,12 @@ export default function BookForm() {
   const isEditing = !!bookId;
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    author: Yup.string().required('Author is required'),
+    title: Yup.string()
+      .trim()
+      .required('Title is required'),
+    author: Yup.string()
+      .trim()
+      .required('Author is required'),
     price: Yup.number()
       .typeError('Price must be a number')
       .required('Price is required')
@@ -32,8 +36,9 @@ export default function BookForm() {
       .integer('Stock must be an integer')
       .positive('Stock must be a positive number'),
     reOrderThreshold: Yup.number()
-      .typeError('Reorder Threshold must be a number')
-      .nullable(true)
+      .typeError('Reorder Notification Remain Items must be a number')
+      .nullable()
+      .integer('Reorder Notification Remain Items must be an integer')
       .transform((value, originalValue) =>
         originalValue === '' ? null : value
       )
