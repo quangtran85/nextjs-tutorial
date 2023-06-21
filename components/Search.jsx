@@ -1,6 +1,6 @@
 import {alpha, Button, InputBase, styled} from '@mui/material'
 import {Search as SearchIcon} from '@mui/icons-material'
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useRouter} from "next/router";
 
 const Search = styled('div')(({ theme }) => ({

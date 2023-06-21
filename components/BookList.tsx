@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
-import { getListBooks } from '../services/inventory';
+import { getStockBooks } from '../services/inventory';
 import { state as authState } from '../services/auth';
 
 export default function BookList() {
@@ -38,11 +38,10 @@ export default function BookList() {
   useEffect(() => {
     if (!router.isReady) return;
     setLoading(true);
-    getListBooks({ limit, skip , title})
+    getStockBooks({ limit, skip , title})
       .then((response) => {
-        const filteredBooks = response.data.filter((book) => book.stock !== 0);
-        setBooks(filteredBooks);
-        setTotalBooks(filteredBooks.length);
+        setBooks(response.data);
+        setTotalBooks(response.pagination.total);
         setLoading(false);
       })
       .catch((error) => {

@@ -32,11 +32,12 @@ export default function BookForm() {
       .integer('Stock must be an integer')
       .positive('Stock must be a positive number'),
     reOrderThreshold: Yup.number()
-      .min(0, 'Re-order threshold must be greater than or equal to 0')
-      .max(999, 'Re-order threshold must be less than or equal to 999')
+      .typeError('Reorder Threshold must be a number')
       .nullable(true)
-      // checking self-equality works for NaN, transforming it to null
-      .transform((_, val) => val === Number(val) ? val : null)
+      .transform((value, originalValue) =>
+        originalValue === '' ? null : value
+      )
+      .default(null),
   });
 
   type Form = InferType<typeof validationSchema>;
@@ -116,6 +117,7 @@ export default function BookForm() {
 
             <form onSubmit={handleSubmit(handleSave)}>
               <TextField
+                required
                 label="Title"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
@@ -127,6 +129,7 @@ export default function BookForm() {
               />
 
               <TextField
+                required
                 label="Author"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
@@ -138,6 +141,7 @@ export default function BookForm() {
               />
 
               <TextField
+                required
                 label="Price"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
@@ -149,6 +153,7 @@ export default function BookForm() {
               />
 
               <TextField
+                required
                 label="Stock"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
@@ -159,16 +164,15 @@ export default function BookForm() {
                 sx={{ mb: 2 }}
               />
               <TextField
-                label="Reorder Notification"
+                label="Reorder Notification Remain Items"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
-                fullWidth
                 {...register('reOrderThreshold')}
                 error={!!errors.reOrderThreshold}
                 helperText={errors.reOrderThreshold?.message}
                 sx={{ mb: 2 }}
+                fullWidth
               />
-
               <Button type="submit" variant="contained" disabled={isSaving}>
                 {isEditing ? 'Save' : 'Add'}
               </Button>

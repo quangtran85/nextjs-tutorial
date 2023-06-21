@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 
 export default function Bar() {
   const router = useRouter();
+  const isHomePage = router.pathname === '/';
   const handleSelectChange = (event) => {
     const selectedOption = event.target.value;
     if (selectedOption === 'add-book') {
@@ -49,7 +50,7 @@ export default function Bar() {
               </Select>
             </Box>
           )}
-          <SearchBox />
+          {isHomePage && <SearchBox />}
           <Box sx={{ flexGrow: 1 }} />
           {authState.value.profile && (
             <>
