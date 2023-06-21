@@ -114,7 +114,7 @@ export default function BookList() {
     );
   }
 
-  const isNextDisabled = books.length < booksPerPage;
+  const isNextDisabled = totalBooks < booksPerPage;
 
   const totalPrice = cartBooks.reduce((acc, book) => acc + book.price, 0);
 
