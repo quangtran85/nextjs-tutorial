@@ -18,7 +18,8 @@ export default function PromotionForm() {
     percentDiscount: Yup.number()
       .typeError('Percentage Discount must be a number')
       .required('Percentage Discount is required')
-      .min(0, 'Percentage Discount must be greater than or equal to 0')
+      .integer('Percentage Discount must be an integer')
+      .moreThan(0, 'Percentage Discount must be greater than or equal to 1')
       .max(100, 'Percentage Discount must be less than or equal to 100'),
     expirationDate: Yup.date()
       .typeError('Expiration Date must be a valid date')
@@ -60,6 +61,7 @@ export default function PromotionForm() {
 
             <form onSubmit={handleSubmit(handleSave)}>
               <TextField
+                required
                 label="Percentage Discount"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
@@ -71,6 +73,7 @@ export default function PromotionForm() {
               />
 
               <TextField
+                required
                 label="Expiration Date"
                 variant="outlined"
                 type="date"

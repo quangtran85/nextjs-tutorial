@@ -14,6 +14,7 @@ export interface Paging {
 
 export interface Params extends Paging{
   title?: string;
+  inStock?: boolean;
 }
 
 export interface BookRequest {
@@ -34,6 +35,12 @@ export interface EditBookResponse {
 
 export const getListBooks = ({ limit, skip, title }: Params) => {
   return apiClient.getListBooks(limit, skip, title).then((result) => {
+    return result;
+  });
+};
+
+export const getStockBooks = async ({ limit, skip, title }: Params) => {
+  return apiClient.getListBooks(limit, skip, title, true ).then((result) => {
     return result;
   });
 };

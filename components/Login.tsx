@@ -75,8 +75,6 @@ export default function Login() {
               id="username"
               label="Username"
               name="username"
-              autoComplete="username"
-              autoFocus
               {...register('username')}
               error={!!errors['username']}
               helperText={errors['username'] ? errors['username'].message : ''}
@@ -89,7 +87,6 @@ export default function Login() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
               {...register('password')}
               error={!!errors['password']}
               helperText={errors['password'] ? errors['password'].message : ''}

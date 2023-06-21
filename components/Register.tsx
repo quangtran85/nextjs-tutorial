@@ -88,8 +88,6 @@ export default function Register() {
                   id="username"
                   label="Username"
                   name="username"
-                  autoComplete="username"
-                  autoFocus
                   {...register('username')}
                   error={!!errors['username']}
                   helperText={errors['username'] ? errors['username'].message : ''}
@@ -103,8 +101,6 @@ export default function Register() {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="password"
-                  autoFocus
                   {...register('password')}
                   error={!!errors['password']}
                   helperText={errors['password'] ? errors['password'].message : ''}
@@ -118,8 +114,6 @@ export default function Register() {
                   label="Confirm Password"
                   type="password"
                   id="confirmPassword"
-                  autoComplete="confirmPassword"
-                  autoFocus
                   {...register('confirmPassword')}
                   error={!!errors['confirmPassword']}
                   helperText={errors['confirmPassword'] ? errors['confirmPassword'].message : ''}
@@ -132,8 +126,6 @@ export default function Register() {
                   id="email"
                   label="Email"
                   name="email"
-                  autoComplete="email"
-                  autoFocus
                   {...register('email')}
                   error={!!errors['email']}
                   helperText={errors['email'] ? errors['email'].message : ''}

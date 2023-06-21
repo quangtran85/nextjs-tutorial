@@ -160,8 +160,8 @@ export const apiClient = {
     } as Customer
   },
 
-  getListBooks: async (limit: number, skip: number, title?: string) => {
-    let endpointUrl = `/store/book/all?limit=${limit}&skip=${skip}`;
+  getListBooks: async (limit: number, skip: number, title?: string, inStock: boolean = false) => {
+    let endpointUrl = inStock ? `/store/book/all-in-stock?limit=${limit}&skip=${skip}` : `/store/book/all?limit=${limit}&skip=${skip}`;
     if (title) {
       endpointUrl += `&title=${encodeURIComponent(title)}`;
     }
