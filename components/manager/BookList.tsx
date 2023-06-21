@@ -50,7 +50,7 @@ export default function ManagerBookList() {
     setPage(value);
   };
 
-  const isNextDisabled = books.length < booksPerPage;
+  const isNextDisabled = totalBooks < booksPerPage;
 
   const handleEditBook = (bookId) => {
     router.push(`/add-book/?bookId=${bookId}`);
