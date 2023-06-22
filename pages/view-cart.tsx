@@ -26,7 +26,7 @@ export default function ViewCart() {
     if (!authState.value.profile) {
       router.push('/sign-in');
     }
-  }, []);
+  }, [router]);
 
   const [cartBooks, setCartBooks] = useState([]);
   const [coupon, setCoupon] = useState('');

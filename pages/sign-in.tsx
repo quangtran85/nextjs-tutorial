@@ -9,7 +9,7 @@ export default function SignIn() {
     if (authState.value.profile) {
       push('/');
     }
-  }, []);
+  }, [push]);
 
   return  <Login/>
 }

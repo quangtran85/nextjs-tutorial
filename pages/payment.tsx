@@ -22,7 +22,7 @@ export default function Payment() {
     if (!authState.value.profile) {
       router.push('/sign-in');
     }
-  }, []);
+  }, [router]);
   const validationSchema = Yup.object().shape({
     creditCardNumber: Yup.string()
       .required('Credit Card Number is required'),
@@ -57,7 +57,7 @@ export default function Payment() {
     };
 
     order(paymentData)
-      .then((data) => {
+      .then(() => {
         localStorage.removeItem('cartBooks');
         router.push('/thanks');
       })
