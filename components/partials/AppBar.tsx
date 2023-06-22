@@ -7,6 +7,7 @@ import {
   Select,
   Toolbar,
   Typography,
+  SelectChangeEvent,
 } from '@mui/material';
 import { AutoStories } from '@mui/icons-material';
 import SearchBox from '../Search.jsx';
@@ -18,7 +19,7 @@ import { useRouter } from 'next/router';
 export default function Bar() {
   const router = useRouter();
   const isHomePage = router.pathname === '/';
-  const handleSelectChange = (event) => {
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
     const selectedOption = event.target.value;
     if (selectedOption === 'add-book') {
       router.push('/add-book');
@@ -31,7 +32,7 @@ export default function Bar() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <Link href="/" passHref>
+          <Link href="/">
             <IconButton size="large" edge="start" aria-label="open drawer" sx={{ mr: 2, color: '#fff' }}>
               <AutoStories />
             </IconButton>

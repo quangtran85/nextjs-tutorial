@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import { getListBooks } from '../../services/inventory';
+import { Book } from '../../services/api';
 
 
 export default function ManagerBookList() {
@@ -26,13 +27,13 @@ export default function ManagerBookList() {
 
   const { limit = booksPerPage, skip = 0, title = '' } = router.query;
   const [loading, setLoading] = useState(false);
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [totalBooks, setTotalBooks] = useState(0);
 
   useEffect(() => {
     if (!router.isReady) return;
     setLoading(true);
-    getListBooks({ limit, skip, title })
+    getListBooks({ limit: Number(limit), skip: Number(skip), title: String(title) })
       .then((response) => {
         setBooks(response.data);
         setTotalBooks(response.pagination.total);
@@ -44,7 +45,7 @@ export default function ManagerBookList() {
       });
   }, [router.isReady, limit, skip, title]);
 
-  const handleChangePage = (event, value) => {
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     const newSkip = (value - 1) * booksPerPage;
     router.push(`/?limit=${booksPerPage}&skip=${newSkip}`);
     setPage(value);
@@ -52,7 +53,7 @@ export default function ManagerBookList() {
 
   const isNextDisabled = totalBooks < booksPerPage;
 
-  const handleEditBook = (bookId) => {
+  const handleEditBook = (bookId: string) => {
     router.push(`/add-book/?bookId=${bookId}`);
   };
 

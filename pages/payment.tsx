@@ -7,12 +7,8 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { state as authState } from '../services/auth'
-
-interface PaymentProps {
-  items: string[];
-  creditCardNumber: string;
-  couponCode?: string;
-}
+import { Book } from '../services/api';
+import { InferType } from 'yup';
 
 export default function Payment() {
   const router = useRouter();
@@ -22,42 +18,44 @@ export default function Payment() {
     if (!authState.value.profile) {
       router.push('/sign-in');
     }
-  }, []);
+  }, [router]);
   const validationSchema = Yup.object().shape({
     creditCardNumber: Yup.string()
       .required('Credit Card Number is required'),
   });
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Record<'bookId', string>[]>([]);
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cartBooks');
     if (storedCart) {
-      const cartBooks = JSON.parse(storedCart);
+      const cartBooks: Book[] = JSON.parse(storedCart);
       const items = cartBooks.map((book) => ({ bookId: book.id }));
       setItems(items);
     }
   }, []);
 
+  type Form = InferType<typeof validationSchema>;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<Form>({
     resolver: yupResolver(validationSchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
-  const onSubmit = (data) => {
-    const paymentData: PaymentProps = {
+  const onSubmit = (data: any) => {
+    const paymentData = {
       items: items,
       creditCardNumber: data.creditCardNumber,
       couponCode: couponCode as string,
     };
 
     order(paymentData)
-      .then((data) => {
+      .then(() => {
         localStorage.removeItem('cartBooks');
         router.push('/thanks');
       })

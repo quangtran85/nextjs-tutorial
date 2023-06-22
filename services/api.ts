@@ -33,7 +33,7 @@ export interface RegistrationRequest {
 }
 
 export interface OrderRequest {
-  items: string[];
+  items: Record<'bookId', string>[];
   creditCardNumber: string;
   couponCode?: string;
 }
@@ -56,15 +56,11 @@ export interface Book {
 }
 
 export interface PromotionRequest {
-  percentageDiscount: number;
+  percentDiscount: number;
   expirationDate: Date;
 }
 
-export interface ApiResponse<T> {
-  data: T;
-}
-
-async function fetcher(url: string, init?: RequestInit, unauthorizedRetry = true) {
+async function fetcher(url: string, init?: RequestInit, unauthorizedRetry = true):  Promise<Response> {
   const token = localStorage.getItem('auth.accessToken') ?? ''
   const baseURl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
   const headers: Record<any, any> = {
@@ -126,8 +122,8 @@ export const apiClient = {
     })
   },
 
-  register: async (req: RegistrationRequest) : Promise<Customer>=> {
-    await fetcher('/account/customers/register', {
+  register: async (req: RegistrationRequest) : Promise<Customer> => {
+    return await fetcher('/account/customers/register', {
       body: JSON.stringify(req),
       method: 'POST',
     }, false).then(async result => {
@@ -160,7 +156,7 @@ export const apiClient = {
     } as Customer
   },
 
-  getListBooks: async (limit: number, skip: number, title?: string, inStock: boolean = false) => {
+  getListBooks: async (limit: number, skip: number, title?: string, inStock?: boolean) => {
     let endpointUrl = inStock ? `/store/book/all-in-stock?limit=${limit}&skip=${skip}` : `/store/book/all?limit=${limit}&skip=${skip}`;
     if (title) {
       endpointUrl += `&title=${encodeURIComponent(title)}`;
@@ -169,7 +165,7 @@ export const apiClient = {
     const { data, pagination } = await result.json();
     return {
       data: data.map(
-        (item) =>
+        (item: any) =>
           ({
             id: item.id,
             title: item.title,

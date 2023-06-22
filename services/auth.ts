@@ -10,6 +10,9 @@ const managerKey = 'manager';
 interface State {
   profile?: Customer;
 }
+interface DecodedToken {
+  role: string;
+}
 
 export const state = signal<State>({});
 
@@ -41,17 +44,16 @@ export const init = () => {
   state.value.profile = JSON.parse(profileString);
 };
 
-export const decodeAccessToken = (accessToken) => {
+export const decodeAccessToken = (accessToken: string): DecodedToken | null => {
   try {
-    const decodedToken = jwt_decode(accessToken);
-    return decodedToken;
+    return jwt_decode(accessToken) as DecodedToken;
   } catch (error) {
     return null;
   }
 };
 
-export const isManager = () => {
-  const accessToken = localStorage.getItem(accessTokenKey);
+export const isManager = (): boolean => {
+  const accessToken = localStorage.getItem(accessTokenKey) as string;
   const decodedToken = decodeAccessToken(accessToken);
   return decodedToken?.role === managerKey;
-}
+};

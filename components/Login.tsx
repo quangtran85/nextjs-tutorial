@@ -12,6 +12,7 @@ import * as Yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { login } from '../services/auth';
+import { InferType } from 'yup';
 
 export default function Login() {
   const validationSchema = Yup.object().shape({
@@ -23,18 +24,20 @@ export default function Login() {
       .min(6, 'Password must be at least 6 characters'),
   });
 
+  type Form = InferType<typeof validationSchema>;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<Form>({
     resolver: yupResolver(validationSchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
   const { push } = useRouter();
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     login(data).then(() => {
       toast.dismiss();
       toast.success('Login successful')
@@ -74,7 +77,6 @@ export default function Login() {
               fullWidth
               id="username"
               label="Username"
-              name="username"
               {...register('username')}
               error={!!errors['username']}
               helperText={errors['username'] ? errors['username'].message : ''}
@@ -83,7 +85,6 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"

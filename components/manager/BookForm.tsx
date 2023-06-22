@@ -21,8 +21,12 @@ export default function BookForm() {
   const isEditing = !!bookId;
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    author: Yup.string().required('Author is required'),
+    title: Yup.string()
+      .trim()
+      .required('Title is required'),
+    author: Yup.string()
+      .trim()
+      .required('Author is required'),
     price: Yup.number()
       .typeError('Price must be a number')
       .required('Price is required')
@@ -32,8 +36,9 @@ export default function BookForm() {
       .integer('Stock must be an integer')
       .positive('Stock must be a positive number'),
     reOrderThreshold: Yup.number()
-      .typeError('Reorder Threshold must be a number')
-      .nullable(true)
+      .typeError('Reorder Notification Remain Items must be a number')
+      .nullable()
+      .integer('Reorder Notification Remain Items must be an integer')
       .transform((value, originalValue) =>
         originalValue === '' ? null : value
       )
@@ -59,7 +64,7 @@ export default function BookForm() {
   useEffect(() => {
     // Fetch current book data an populate form fields if editing
     if (isEditing) {
-      fetchBookData(bookId).then((bookData) => {
+      fetchBookData(bookId.toString()).then((bookData) => {
         setValue('title', bookData.title);
         setValue('author', bookData.author);
         setValue('price', bookData.price);
@@ -72,10 +77,10 @@ export default function BookForm() {
     }
   }, [isEditing, bookId, setValue, reset]);
 
-  const handleSave = (data) => {
+  const handleSave = (data: any) => {
     if (isEditing) {
       setIsSaving(true); // Set saving status to true
-      editBook(bookId, data)
+      editBook(bookId.toString(), data)
         .then(() => {
           setIsSaving(false); // Set saving status to false
           toast.dismiss();
