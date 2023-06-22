@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import { createPromotion } from '../../services/inventory';
+import { InferType } from 'yup';
 
 export default function PromotionForm() {
   const validationSchema = Yup.object().shape({
@@ -27,18 +28,20 @@ export default function PromotionForm() {
       .min(new Date(), 'Expiration Date must be in the future'),
   });
 
+  type Form = InferType<typeof validationSchema>;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset, // Form reset function
-  } = useForm({
+  } = useForm<Form>({
     resolver: yupResolver(validationSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
   });
 
-  const handleSave = (data) => {
+  const handleSave = (data: Form) => {
     createPromotion(data)
       .then(() => {
         toast.success('Promotion added successfully!');

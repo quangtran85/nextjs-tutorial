@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { createAccount } from '../services/account';
+import { InferType } from 'yup';
 
 export default function Register() {
   const validationSchema = Yup.object().shape({
@@ -24,8 +25,8 @@ export default function Register() {
       .required('Password is required')
       .min(6, 'Password must be at least 6 characters'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref<any>("password")], "Passwords must match")
-      .required("Passwords does not match"),
+      .required('Confirm Password is required')
+      .oneOf([Yup.ref('password')], 'Passwords must match'),
     email: Yup.string().email("Email Incorrect format").required("Email is required"),
     address: Yup.string().optional(),
     city: Yup.string().optional(),
@@ -34,18 +35,20 @@ export default function Register() {
     isMember: Yup.boolean().optional(),
   });
 
+  type Form = InferType<typeof validationSchema>;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<Form>({
     resolver: yupResolver(validationSchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
   const { push } = useRouter();
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     createAccount(data).then(() => {
       toast.dismiss();
       toast.success('Register successful')
@@ -87,7 +90,6 @@ export default function Register() {
                   fullWidth
                   id="username"
                   label="Username"
-                  name="username"
                   {...register('username')}
                   error={!!errors['username']}
                   helperText={errors['username'] ? errors['username'].message : ''}
@@ -97,7 +99,6 @@ export default function Register() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
                   label="Password"
                   type="password"
                   id="password"
@@ -110,7 +111,6 @@ export default function Register() {
                 <TextField
                   required
                   fullWidth
-                  name="confirmPassword"
                   label="Confirm Password"
                   type="password"
                   id="confirmPassword"
@@ -125,7 +125,6 @@ export default function Register() {
                   fullWidth
                   id="email"
                   label="Email"
-                  name="email"
                   {...register('email')}
                   error={!!errors['email']}
                   helperText={errors['email'] ? errors['email'].message : ''}
@@ -136,7 +135,6 @@ export default function Register() {
                   fullWidth
                   id="address"
                   label="Address"
-                  name="address"
                   autoComplete="address"
                   {...register('address')}
                 />
@@ -146,7 +144,6 @@ export default function Register() {
                   fullWidth
                   id="city"
                   label="City"
-                  name="city"
                   autoComplete="city"
                   {...register('city')}
                 />
@@ -156,7 +153,6 @@ export default function Register() {
                   fullWidth
                   id="state"
                   label="State"
-                  name="state"
                   autoComplete="state"
                   {...register('state')}
                 />

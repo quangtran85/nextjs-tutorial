@@ -64,7 +64,7 @@ export default function BookForm() {
   useEffect(() => {
     // Fetch current book data an populate form fields if editing
     if (isEditing) {
-      fetchBookData(bookId).then((bookData) => {
+      fetchBookData(bookId.toString()).then((bookData) => {
         setValue('title', bookData.title);
         setValue('author', bookData.author);
         setValue('price', bookData.price);
@@ -77,10 +77,10 @@ export default function BookForm() {
     }
   }, [isEditing, bookId, setValue, reset]);
 
-  const handleSave = (data) => {
+  const handleSave = (data: any) => {
     if (isEditing) {
       setIsSaving(true); // Set saving status to true
-      editBook(bookId, data)
+      editBook(bookId.toString(), data)
         .then(() => {
           setIsSaving(false); // Set saving status to false
           toast.dismiss();

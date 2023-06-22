@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
 import { state as authState } from '../services/auth';
 import { checkCoupon } from '../services/inventory';
+import { Book } from '../services/api';
 
 export default function ViewCart() {
   const router = useRouter();
@@ -28,12 +29,12 @@ export default function ViewCart() {
     }
   }, [router]);
 
-  const [cartBooks, setCartBooks] = useState([]);
-  const [coupon, setCoupon] = useState('');
+  const [cartBooks, setCartBooks] = useState<Book[]>([]);
+  const [coupon, setCoupon] = useState<string>('');
   const [totalPrice, setTotalPrice] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [couponValid, setCouponValid] = useState(true);
-  const [couponError, setCouponError] = useState('');
+  const [couponError, setCouponError] = useState<string>('');
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cartBooks');
@@ -51,7 +52,7 @@ export default function ViewCart() {
     calculateTotalPrice();
   }, [cartBooks]);
 
-  const removeFromCart = (bookId) => {
+  const removeFromCart = (bookId: string) => {
     const updatedCartBooks = cartBooks.filter((cartBook) => cartBook.id !== bookId);
     setCartBooks(updatedCartBooks);
     localStorage.setItem('cartBooks', JSON.stringify(updatedCartBooks));
@@ -70,7 +71,7 @@ export default function ViewCart() {
     });
   };
 
-  const handleCouponChange = (event) => {
+  const handleCouponChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCoupon(event.target.value);
   };
 

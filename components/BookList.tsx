@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
 import { getStockBooks } from '../services/inventory';
 import { state as authState } from '../services/auth';
+import { Book } from '../services/api';
 
 export default function BookList() {
   const [page, setPage] = useState(1);
@@ -29,23 +30,22 @@ export default function BookList() {
 
   const { limit = booksPerPage, skip = 0 , title = ''} = router.query;
   const [loading, setLoading] = useState(false);
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [totalBooks, setTotalBooks] = useState(0);
-  const [cartBooks, setCartBooks] = useState([]);
-  const [selectedBooks, setSelectedBooks] = useState([]);
+  const [cartBooks, setCartBooks] = useState<Book[]>([]);
+  const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
   const [isReload, setIsReload ] = useState(true);
 
   useEffect(() => {
     if (!router.isReady) return;
     setLoading(true);
-    getStockBooks({ limit, skip , title})
+    getStockBooks({ limit: Number(limit), skip: Number(skip), title: String(title) })
       .then((response) => {
         setBooks(response.data);
         setTotalBooks(response.pagination.total);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
         setLoading(false);
       });
   }, [router.isReady, limit, skip, title]);
@@ -64,7 +64,7 @@ export default function BookList() {
     }
   }, [isReload, cartBooks]);
 
-  const addToCart = (book) => {
+  const addToCart = (book: Book) => {
     if (!authState.value.profile) {
       router.push('/sign-in');
       return;
@@ -76,16 +76,16 @@ export default function BookList() {
     setSelectedBooks(selectedBooks.filter((id) => cartBooks.includes(id)));
   };
 
-  const handleCheckboxChange = (event) => {
-    const bookId = event.target.value;
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, book: Book) => {
     if (event.target.checked) {
-      setSelectedBooks([...selectedBooks, bookId]);
+      setSelectedBooks([...selectedBooks, book]);
     } else {
-      setSelectedBooks(selectedBooks.filter((id) => id !== bookId));
+      setSelectedBooks(selectedBooks.filter((selectedBook) => selectedBook.id !== book.id));
     }
   };
 
-  const handleChangePage = (event, value) => {
+
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     const newSkip = (value - 1) * booksPerPage;
     router.push(`/?limit=${booksPerPage}&skip=${newSkip}`);
     setPage(value);
@@ -95,7 +95,7 @@ export default function BookList() {
     router.push('/view-cart');
   };
 
-  const removeFromCart = (bookId) => {
+  const removeFromCart = (bookId: string) => {
     setCartBooks(cartBooks.filter((cartBook) => cartBook.id !== bookId));
   };
 
@@ -152,8 +152,8 @@ export default function BookList() {
                     <ListItemSecondaryAction sx={{ pr: 2 }}>
                       <Checkbox
                         value={book.id}
-                        checked={selectedBooks.includes(book.id)}
-                        onChange={handleCheckboxChange}
+                        checked={selectedBooks.some((selectedBook) => selectedBook.id === book.id)}
+                        onChange={(event) => handleCheckboxChange(event, book)}
                         sx={{ color: '#0066ff' }}
                       />
                     </ListItemSecondaryAction>
@@ -179,10 +179,9 @@ export default function BookList() {
                         variant="contained"
                         disabled={selectedBooks.length === 0}
                         onClick={() => {
-                          selectedBooks.forEach((bookId) => {
-                            const book = books.find((book) => book.id === bookId);
-                            if (book && !cartBooks.includes(book)) {
-                              addToCart(book);
+                          selectedBooks.forEach((selectedBook) => {
+                            if (selectedBook && !cartBooks.some((cartBook) => cartBook.id === selectedBook.id)) {
+                              addToCart(selectedBook);
                             }
                           });
                         }}
