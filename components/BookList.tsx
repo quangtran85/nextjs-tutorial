@@ -1,17 +1,5 @@
-import styled from '@emotion/styled'
-import { CheckBox } from '@mui/icons-material'
-import {
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-  alpha,
-} from '@mui/material'
-import React from 'react'
-import { IBook } from '../services/inventory'
+import { Divider, Grid, List, Paper, Typography } from '@mui/material'
+import { IBook } from '@services/inventory'
 
 interface BookListProps {
   data: IBook[]

@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react'
+import { createContext, useReducer } from 'react'
 
 export const ActionType = {
   SET_BOOK_LIST: 'SET_BOOK_LIST',
@@ -27,4 +27,4 @@ const StateProvider = ({ children }) => {
   return <Provider value={{ state, dispatch }}>{children}</Provider>
 }
 
-export { store, StateProvider }
+export { StateProvider, store }

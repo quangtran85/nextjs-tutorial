@@ -1,3 +1,6 @@
+import SearchBox from '@components/Search.jsx'
+import LogoutLink from '@components/auth/LogoutLink'
+import { AutoStories } from '@mui/icons-material'
 import {
   AppBar,
   Box,
@@ -6,9 +9,6 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import { AutoStories } from '@mui/icons-material'
-import SearchBox from '../Search.jsx'
-import LogoutLink from '../auth/LogoutLink'
 
 export default function Bar() {
   return (

@@ -1,7 +1,7 @@
-import { Button, InputBase, alpha, styled } from '@mui/material'
+import { ActionType, store } from '@contexts/AppContext'
 import { Search as SearchIcon } from '@mui/icons-material'
+import { Button, InputBase, alpha, styled } from '@mui/material'
 import { useContext } from 'react'
-import { ActionType, store } from '../contexts/AppContext'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

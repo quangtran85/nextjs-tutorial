@@ -1,6 +1,6 @@
-import BookList from '../components/BookList'
+import BookList from '@components/BookList'
+import { store } from '@contexts/AppContext'
 import { useContext } from 'react'
-import { store } from '../contexts/AppContext'
 
 export default function Home() {
   const { state } = useContext(store)
