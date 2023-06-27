@@ -9,13 +9,17 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
+import { useRouter } from 'next/router'
 
 export default function Bar() {
+  const router = useRouter()
+
   return (
     <>
       <AppBar position="static">
         <Toolbar>
           <IconButton
+            onClick={() => router.push('/')}
             size="large"
             edge="start"
             color="inherit"
