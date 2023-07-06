@@ -7,13 +7,16 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { ApiClient } from '@services/api'
+import { isEmpty as _isEmpty } from 'lodash'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 export default function Login() {
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const validateSchema = Yup.object().shape({
     username: Yup.string()
@@ -36,6 +39,7 @@ export default function Login() {
   })
 
   const onSubmit = async (data: any) => {
+    setIsLoading(true)
     ApiClient.login(data)
       .then(() => {
         toast.dismiss()
@@ -45,6 +49,7 @@ export default function Login() {
       .catch(({ message }) => {
         toast.dismiss()
         toast.error(message)
+        setIsLoading(false)
       })
   }
 
@@ -100,6 +105,7 @@ export default function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={!_isEmpty(errors) || isLoading}
             >
               Sign In
             </Button>
