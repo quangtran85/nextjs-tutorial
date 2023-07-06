@@ -72,7 +72,7 @@ export const ApiClient = {
     ).then(
       async (result: Response) => {
         if (!result.ok) {
-          return Promise.reject({ message: 'Invalid username or password.' })
+          return Promise.reject({ message: 'Invalid username or password' })
         }
 
         const { data } = await result.json()
@@ -82,7 +82,7 @@ export const ApiClient = {
         }
       },
       () => {
-        return Promise.reject({ message: 'Unknown error.' })
+        return Promise.reject({ message: 'Unknown error' })
       }
     )
   },

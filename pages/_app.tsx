@@ -6,6 +6,8 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 
@@ -27,6 +29,18 @@ export default function MyApp(props: MyAppProps) {
         <StateProvider>
           <MainLayout>
             <Component {...pageProps} />
+            <ToastContainer
+              position="bottom-right"
+              autoClose={400}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </MainLayout>
         </StateProvider>
       </ThemeProvider>

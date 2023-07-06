@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
@@ -5,16 +6,46 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
+import { ApiClient } from '@services/api'
+import { useRouter } from 'next/router'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import * as Yup from 'yup'
 
 export default function Login() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('username'),
-      password: data.get('password'),
-    })
+  const router = useRouter()
+
+  const validateSchema = Yup.object().shape({
+    username: Yup.string()
+      .required('Username is required')
+      .min(5, 'Username must be at least 5 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters'),
+  })
+  type Form = Yup.InferType<typeof validateSchema>
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Form>({
+    resolver: yupResolver(validateSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+  })
+
+  const onSubmit = async (data: any) => {
+    ApiClient.login(data)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Login successful')
+        router.push('/')
+      })
+      .catch(({ message }) => {
+        toast.dismiss()
+        toast.error(message)
+      })
   }
 
   return (
@@ -36,7 +67,7 @@ export default function Login() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -46,19 +77,23 @@ export default function Login() {
               fullWidth
               id="username"
               label="Username"
-              name="username"
               autoComplete="username"
               autoFocus
+              {...register('username')}
+              error={!!errors['username']}
+              helperText={errors['username'] ? errors['username'].message : ''}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              {...register('password')}
+              error={!!errors['password']}
+              helperText={errors['password'] ? errors['password'].message : ''}
             />
             <Button
               type="submit"

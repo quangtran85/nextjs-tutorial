@@ -1,5 +1,5 @@
 import Register from '@components/Register'
 
-export default function signUp() {
+export default function SignUp() {
   return <Register />
 }
